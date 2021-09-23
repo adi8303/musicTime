@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
@@ -30,13 +31,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE =1;
-    ArrayList<MusicFiles> musicFiles ;
+    static ArrayList<MusicFiles> musicFiles ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         permission();
-        initViewPager();
+
     }
 //asking for permission from the user
     private void permission(){
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
             ,REQUEST_CODE);
         }
         else{
-            Toast.makeText(this,"Permission Granted !",Toast.LENGTH_SHORT).show();
         musicFiles = getAllAudio(this);
+            initViewPager();
         }
     }
 
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode==REQUEST_CODE){
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this,"Permission Granted !",Toast.LENGTH_SHORT).show();
+                musicFiles=getAllAudio(this);
+                initViewPager();
             }
             else{
                 ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
